@@ -57,9 +57,9 @@
 - 1o. Bimestre: 26/09/18
 - 2o. Bimestre: 28/11/18
 
-<!--## :computer: Recursos
-- ?
--->
+## :computer: Recursos
+
+- [Telegram](https://t.me/joinchat/CFsBrg8lFRUO0qHttkFJEw)
 
 ## :orange_book: Bibliografia
 
