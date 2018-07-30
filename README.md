@@ -4,8 +4,6 @@
 
 | **Data** | **Conteúdo**                                                                     |
 |----------|----------------------------------------------------------------------------------|
-				
-				
 |	30/07/18	|	Apresentação da disciplina: ementa, plano de ensino, estudo dirigido e plano de aula.	|
 |	01/08/18	|	Aula01 - Programação Python: IDE, variáveis, tipos de dados, estruturas condicionais, estruturas de repetição	|
 |	06/08/18	|	Aula02 - Programação Python: classes, métodos, funções	|
