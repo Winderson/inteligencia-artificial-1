@@ -61,6 +61,7 @@
 
 - [Telegram](https://t.me/joinchat/CFsBrg8lFRUO0qHttkFJEw)
 
+
 ## :orange_book: Bibliografia
 
 - [1] RUSSELL, Stuart; NORVIG, Peter. Inteligência artificial. 2.ed. Rio de Janeiro: Elsevier Brasil, 2004. 
