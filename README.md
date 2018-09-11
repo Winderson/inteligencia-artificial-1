@@ -61,6 +61,9 @@
 
 - [Telegram](https://t.me/joinchat/CFsBrg8lFRUO0qHttkFJEw)
 
+### Modelo das Anotações
+
+- [Método Cornell](https://pt.wikihow.com/Fazer-Anota%C3%A7%C3%B5es-Usando-o-M%C3%A9todo-Cornell)
 
 ## :orange_book: Bibliografia
 
