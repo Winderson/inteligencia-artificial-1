@@ -12,6 +12,7 @@ E = 'esquerda'
 ESQ = 0
 DIR = 1
 
+
 class ProblemaMissionario(Problema):
     """Definicao do problema de missionarios e canibais."""
 
@@ -26,6 +27,8 @@ class ProblemaMissionario(Problema):
             # Referencia para o estado pai. Usado para descobrir qual eh
             # a solucao do problema
             self.pai = None
+            self.custo = 0
+            self.acao = ''
 
         def copy(self):
             estado = ProblemaMissionario.Estado()
@@ -33,6 +36,9 @@ class ProblemaMissionario(Problema):
             estado.margem_esq = self.margem_esq.copy()
             estado.barco = self.barco
             return estado
+
+        def __repr__(self):
+            return f'{self.margem_esq} | {self.barco} | {self.margem_dir}'
 
     @property
     def estado_inicial(self):
@@ -66,7 +72,89 @@ class ProblemaMissionario(Problema):
         """Verifica se a funcao atingiu o seu objetivo."""
 
         # Todos estao do lado esquerdo do rio
-        return len(estado.margem_dir) == 6
+        return len(estado.margem_esq) == 6
+
+    def __mover_para_esq(self, estado_pai, pessoas, acao):
+        """Move pessoas para a margem esquerda."""
+        estado = estado_pai.copy()
+
+        # Salva a acao ja realizada
+        estado.acao = acao
+
+        # Remove da margem direita
+        for p in pessoas:
+            if p not in estado.margem_dir:
+                return None
+            estado.margem_dir.remove(p)
+
+        # Move o barco
+        estado.barco = ESQ
+
+        # Desembarca na margem esquerda
+        for p in pessoas:
+            if p not in estado.margem_esq:
+                return None
+            estado.margem_esq.append(p)
+
+        # Define o no pai do estado atual
+        estado.pai = estado_pai
+
+        # Verifica se o estado eh valido
+        return self.__valida_restricoes(estado)
+
+    def __mover_para_dir(self, estado_pai, pessoas, acao):
+        """Move pessoas para a margem direita."""
+        estado = estado_pai.copy()
+
+        # Salva a acao ja realizada
+        estado.acao = acao
+
+        # Remove da margem esquerda
+        for p in pessoas:
+            if p not in estado.margem_esq:
+                return None
+            estado.margem_esq.remove(p)
+
+        # Move o barco
+        estado.barco = DIR
+
+        # Desembarca na margem esquerda
+        for p in pessoas:
+            if p not in estado.margem_dir:
+                return None
+            estado.margem_dir.append(p)
+
+        # Define o no pai do estado atual
+        estado.pai = estado_pai
+
+        # Verifica se o estado eh valido
+        return self.__valida_restricoes(estado)
+
+    def __valida_restricoes(self, estado):
+
+        # 1. Numero total de canibais e missionarios deve ser 6
+        print(estado)
+
+        total_m = estado.margem_esq.count(M) + estado.margem_dir.count(M)
+        total_c = estado.margem_esq.count(C) + estado.margem_dir.count(C)
+        print(total_m)
+        print(total_c)
+
+        # 2. Verifica restricao de missionarios >= canibais e missionarios
+        diferenca_esq = estado.margem_esq.count(M) - estado.margem_esq.count(C) if estado.margem_esq.count(
+            M) != 0 else 0
+        diferenca_dir = estado.margem_dir.count(M) - estado.margem_dir.count(C) if estado.margem_dir.count(
+            C) != 0 else 0
+        print(diferenca_esq)
+        print(diferenca_dir)
+
+        print('-' * 3)
+
+        # Retorna o estado caso ele seja valido
+        if total_m == 3 and total_c == 3 and diferenca_esq >= 0 and diferenca_dir >= 0:
+            return estado
+        else:
+            return None
 
     def funcao_sucessora(self, estado):
         """Gera os estados sucessores a partir de um estado."""
@@ -77,31 +165,28 @@ class ProblemaMissionario(Problema):
         # - 1 missionario no barco
         # - 1 canibal no barco
         # - 1 missionario e 1 canibal no barco
+        sucessores = []
 
         if estado.barco == DIR:
+            print('Movendo barco para esquerda')
+            a1 = self.__mover_para_esq(estado, [M, M], '2M')
+            a2 = self.__mover_para_esq(estado, [C, C], '2C')
+            a3 = self.__mover_para_esq(estado, [M], '1M')
+            a4 = self.__mover_para_esq(estado, [C], '1C')
+            a5 = self.__mover_para_esq(estado, [M, C],'1M 1C')
+        else:
+            a1 = self.__mover_para_dir(estado, [M, M], '2M')
+            a2 = self.__mover_para_dir(estado, [C, C], '2C')
+            a3 = self.__mover_para_dir(estado, [M], 'M')
+            a4 = self.__mover_para_dir(estado, [C], 'C')
+            a5 = self.__mover_para_dir(estado, [M, C], '1M 1C')
 
-            
-            novo_estado = estado.copy()
-            novo_estado.margem_dir.remove(M)
-            novo_estado.margem_dir.remove(M)
-            novo_estado.margem_esq.append(M)
-            novo_estado.margem_esq.append(M)
+        # Cria uma lista apenas com os estados validos
+        if a1: sucessores.append(a1)
+        if a2: sucessores.append(a2)
+        if a3: sucessores.append(a3)
+        if a4: sucessores.append(a4)
+        if a5: sucessores.append(a5)
 
-            print(novo_estado.margem_esq.count(M))
-            print(novo_estado.margem_esq.count(C))
+        return sucessores
 
-            print(novo_estado.margem_esq)
-            print(novo_estado.margem_esq.count(M))
-            print(novo_estado.margem_esq.count(C))
-
-            print(novo_estado.margem_dir)
-            print(novo_estado.margem_dir.count(M))
-            print(novo_estado.margem_dir.count(C))
-
-
-
-
-
-p = ProblemaMissionario()
-
-p.funcao_sucessora(p.estado_inicial)
