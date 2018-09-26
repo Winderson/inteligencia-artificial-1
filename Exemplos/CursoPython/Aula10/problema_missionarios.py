@@ -4,8 +4,8 @@ from enum import Enum
 from Aula10.problema import Problema
 
 # Constantes para o problema dos missionarios e canibais
-M = 'missionario'
-C = 'canibal'
+M = 'M'
+C = 'C'
 D = 'direita'
 E = 'esquerda'
 
@@ -38,7 +38,12 @@ class ProblemaMissionario(Problema):
             return estado
 
         def __repr__(self):
-            return f'{self.margem_esq} | {self.barco} | {self.margem_dir}'
+            return f'{str(self.margem_esq):15} | {self.barco} | {str(self.margem_dir):15}'
+
+        def __eq__(self, other):
+            return self.margem_esq.sort() == other.margem_esq.sort() \
+                   and self.margem_dir.sort() == other.margem_dir.sort() \
+                   and self.barco == other.barco
 
     @property
     def estado_inicial(self):
@@ -92,8 +97,6 @@ class ProblemaMissionario(Problema):
 
         # Desembarca na margem esquerda
         for p in pessoas:
-            if p not in estado.margem_esq:
-                return None
             estado.margem_esq.append(p)
 
         # Define o no pai do estado atual
@@ -120,8 +123,6 @@ class ProblemaMissionario(Problema):
 
         # Desembarca na margem esquerda
         for p in pessoas:
-            if p not in estado.margem_dir:
-                return None
             estado.margem_dir.append(p)
 
         # Define o no pai do estado atual
@@ -133,22 +134,14 @@ class ProblemaMissionario(Problema):
     def __valida_restricoes(self, estado):
 
         # 1. Numero total de canibais e missionarios deve ser 6
-        print(estado)
-
         total_m = estado.margem_esq.count(M) + estado.margem_dir.count(M)
         total_c = estado.margem_esq.count(C) + estado.margem_dir.count(C)
-        print(total_m)
-        print(total_c)
 
         # 2. Verifica restricao de missionarios >= canibais e missionarios
         diferenca_esq = estado.margem_esq.count(M) - estado.margem_esq.count(C) if estado.margem_esq.count(
             M) != 0 else 0
         diferenca_dir = estado.margem_dir.count(M) - estado.margem_dir.count(C) if estado.margem_dir.count(
             C) != 0 else 0
-        print(diferenca_esq)
-        print(diferenca_dir)
-
-        print('-' * 3)
 
         # Retorna o estado caso ele seja valido
         if total_m == 3 and total_c == 3 and diferenca_esq >= 0 and diferenca_dir >= 0:
@@ -168,7 +161,6 @@ class ProblemaMissionario(Problema):
         sucessores = []
 
         if estado.barco == DIR:
-            print('Movendo barco para esquerda')
             a1 = self.__mover_para_esq(estado, [M, M], '2M')
             a2 = self.__mover_para_esq(estado, [C, C], '2C')
             a3 = self.__mover_para_esq(estado, [M], '1M')

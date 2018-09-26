@@ -17,6 +17,9 @@ class BuscaSemInformacao(object):
         # 1. Adiciona o estado inicial na lista de borda
         borda = [problema.estado_inicial]
 
+        # Cria uma lista com a memoria dos estados ja visitados
+        memoria = [problema.estado_inicial]
+
         while True:
 
             # 2. Verifica se houve falha
@@ -26,8 +29,9 @@ class BuscaSemInformacao(object):
 
             # 3. Recupera o proximo estado
             estado = borda.pop(0)
-            print(estado)
-            print(type(estado))
+            print(f'='*80)
+            print(f'> Estado sendo avaliado:')
+            print(f'{estado}')
 
             # 4. Verifica se achou a solucao objetivo
             if problema.funcao_objetivo(estado):
@@ -37,6 +41,32 @@ class BuscaSemInformacao(object):
             # 5. Geracao dos estados sucessores
             # ** Na busca em largura, os estados sucessores sao adicionados
             # ** ao final da lista
-            borda.append(problema.funcao_sucessora(estado))
+            sucessores = problema.funcao_sucessora(estado)
+            borda.extend([x for x in sucessores if x not in memoria])
+
+            memoria.extend([x for x in sucessores if x not in memoria])
+
+            # print('-'*80)
+            print('sucessores:')
+            for x in sucessores:
+                print(x)
+            #
+            print('*-*'*80)
+            print('memoria:')
+            for x in memoria:
+                print(x)
+            print()
+
+            # print('-' * 80)
+            # print('borda DEPOIS:')
+            # for x in borda:
+            #     print(x)
+            # print()
+
+
+            # Adiciona os novos estados gerados na memoria
+            memoria.extend(sucessores)
+
+            print(f'> Estados sucessores: {len(sucessores)}')
 
 
